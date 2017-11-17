@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite - testy w gridzie" verbose="3" parallel="tests" thread-count="2">
+    <parameter name="url" value="http://helion.pl"/>
+    <parameter name="seleniumHub" value="212.106.131.202"/>
+    <parameter name="seleniumPort" value="4444"/>
+    <parameter name="browser" value="firefox"/> <!--//parametr domyslny, czyli gdyby pozniej bylo cos nieustawione, to wezmie domyslny-->
+
+    <test name="Test Grid Firefox">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="exercise1.MojPierwszyTest"/>
+        </classes>
+    </test>
+    <test name="Test Grid Chrome">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="exercise1.MojPierwszyTest"/>
+        </classes>
+    </test>
+    <test name="Test Grid Edge">
+        <parameter name="browser" value="edge"/>
+        <classes>
+            <class name="exercise1.MojPierwszyTest"/>
+        </classes>
+    </test> 
+</suite>
+
