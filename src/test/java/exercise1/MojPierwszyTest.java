@@ -6,35 +6,74 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MojPierwszyTest {
     WebDriver driver;
 
-    @BeforeTest
-    public void setUp() {
+//    @BeforeTest
+//    public void setUp() throws MalformedURLException {
 //        System.setProperty("webdriver.gecko.driver", "C:\\pliki\\geckodriver.exe");
-        System.setProperty("webdriver.chrome.driver", "C:\\pliki\\chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver", "C:\\pliki\\chromedriver.exe");
 //        System.setProperty("webdriver.ie.driver", "C:\\pliki\\IEDriverServer.exe");
 //        System.setProperty("webdriver.edge.driver", "C:\\pliki\\MicrosoftWebDriver.exe");
 //        driver = new FirefoxDriver();
-        driver = new ChromeDriver();
+//        driver = new ChromeDriver();
 //        driver = new InternetExplorerDriver();
 //        driver = new EdgeDriver();
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.get("https://www.helion.pl");
-    }
+//        DesiredCapabilities chromeCaps = DesiredCapabilities.chrome();
+//        chromeCaps.setCapability(CapabilityType.BROWSER_NAME, "chrome");
+//        chromeCaps.setCapability(CapabilityType.VERSION, "62.w10");
+//        chromeCaps.setCapability(CapabilityType.PLATFORM, "WIN10");
+//        driver = new RemoteWebDriver(
+//                new URL("http://212.106.131.202:4444/wd/hub"), chromeCaps);
+//
+//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//        driver.get("https://www.helion.pl");
+//    }
 
     @AfterTest
     public void tearDown() {
         driver.quit();
+    }
+
+    @BeforeMethod
+    @Parameters ({"seleniumHub", "seleniumPort", "browser", "url"})
+    public void setUp(String seleniumHub, int seleniumPort, String browser, String url)
+        throws MalformedURLException {
+        if (browser.equals("firefox")){
+            System.setProperty("webdriver.gecko.driver", "C:\\pliki\\geckodriver.exe");
+            DesiredCapabilities ffCaps = DesiredCapabilities.firefox();
+            ffCaps.setCapability(CapabilityType.BROWSER_NAME, browser);
+            driver = new RemoteWebDriver
+                    (new URL("http://212.106.131.202:4444/wd/hub"), ffCaps);
+        } else if (browser.equals("chrome")){
+            System.setProperty("webdriver.chrome.driver", "C:\\pliki\\chromedriver.exe");
+            DesiredCapabilities chromeCaps = DesiredCapabilities.chrome();
+            chromeCaps.setCapability(CapabilityType.BROWSER_NAME, browser);
+            driver = new RemoteWebDriver
+                    (new URL("http://212.106.131.202:4444/wd/hub"),chromeCaps);
+        } else if (browser.equals("edge")){
+            System.setProperty("webdriver.edge.driver", "C:\\pliki\\MicrosoftWebDriver.exe");
+            DesiredCapabilities edgeCaps = DesiredCapabilities.edge();
+            edgeCaps.setCapability(CapabilityType.BROWSER_NAME, browser);
+            driver = new RemoteWebDriver
+                    (new URL("http://212.106.131.202:4444/wd/hub"), edgeCaps);
+        }
+        driver.navigate().to(url);
+        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
     }
 
     @Test
